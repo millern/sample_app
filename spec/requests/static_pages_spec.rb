@@ -23,6 +23,23 @@ describe "Static pages" do
           page.should have_selector("li##{item.id}", text:item.content)
         end
       end
+      it "should display the number of microposts" do
+        page.should have_content("#{user.microposts.count} microposts")
+          while user.microposts.count > 1
+          click_link "delete"
+          end
+        page.should have_content("#{user.microposts.count} micropost")
+      end
+
+      describe "pagination" do
+         
+        before(:all) do
+          35.times { FactoryGirl.create(:micropost,user:user, content:"Lorem ipsum") }
+        end
+        after(:all)  { User.delete_all }
+        it {should have_selector('div.pagination')}
+      end
+
     end
   end
 
